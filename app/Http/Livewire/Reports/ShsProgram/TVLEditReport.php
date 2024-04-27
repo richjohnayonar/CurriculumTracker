@@ -28,11 +28,15 @@ class TVLEditReport extends Component
     public $selectedSchool;
     public $school;
 
-    protected $listeners = ['editTVLSelect2'];
+    protected $listeners = ['editTVLSelect2', 'updateRecord'];
 
     public function editTVLSelect2($value)
     {
         $this->selectedSchool = $value;
+    }
+
+    public function confirmUpdate(){
+        $this->emit('confirmUpdate');
     }
     
     public function mount($id)
@@ -90,7 +94,7 @@ class TVLEditReport extends Component
         return redirect()->to($route);
     } 
 
-    public function update(){
+    public function updateRecord(){
         
         // Find the ALS record to update
         $TVLDB = TVLProgramModel::findOrFail($this->TVLTrackID);
@@ -119,7 +123,10 @@ class TVLEditReport extends Component
             
             // Optionally, you can provide feedback to the user that the record has been "updated"
             // For example:
-            session()->flash('message', 'Record updated.');
+            $this->emit('showNotifications', [
+                'type' => 'success',
+                'message' => 'Record updated',
+            ]);
             
             return;
         }
@@ -140,7 +147,12 @@ class TVLEditReport extends Component
             // You can add any specific action here, such as showing an error message
             // or redirecting back with a message indicating the duplicate record.
             // For now, let's just halt further processing.
-            dd('Record already exists with the same attributes.');
+               $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'Failed to update, record alreay exist on database',
+            ]);
+
+            return;
         }
         
          $this->TVLTrack->update([
@@ -174,6 +186,10 @@ class TVLEditReport extends Component
                 NCPasserName::create(['tvlTrack_id' => $this->TVLTrack->id, 'full_name' => $passerData['full_name']]);
             }
         }
+        $this->emit('showNotifications', [
+                'type' => 'success',
+                'message' => 'Record updated',
+            ]);
     }
 
     public function updated(){

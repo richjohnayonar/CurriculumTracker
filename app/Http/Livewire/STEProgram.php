@@ -44,7 +44,12 @@ class STEProgram extends Component
 
         if($existingRecord){
             // If a record exists, prevent saving the duplicate record
-            dd('Record already exists.');
+              $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'This record already in the database.',
+            ]);
+
+            return;
         }
 
         $SSESProgram = new STEProgramModel();
@@ -58,6 +63,11 @@ class STEProgram extends Component
         $SSESProgram->overall_enrolled = $this->overallEnrolled;
 
         $SSESProgram->save();
+
+          $this->emit('showNotifications', [
+        'type' => 'success',
+        'message' => 'Record Save.',
+        ]);
     }
     
     public function render()

@@ -16,30 +16,30 @@
             <li class="w-full focus-within:z-10">
                 <a href="#" x-on:click.prevent="special_p_selectedTab = 'SSES'"
                     class="inline-block w-full p-4 border-r border-gray-200 dark:border-gray-700 hover:text-gray-700 hover:bg-gray-50 :outline-none"
-                    :class="{'active rounded-es-2xl bg-slate-500 text-slate-100 hover:bg-slate-500 hover:text-slate-100 cursor-default': special_p_selectedTab === 'SSES'}"
+                    :class="{'active rounded-es-2xl bg-gray-700 text-slate-100 hover:bg-gray-700 hover:text-slate-100 cursor-default': special_p_selectedTab === 'SSES'}"
                     aria-current="page">SSES Program</a>
             </li>
             <li class="w-full focus-within:z-10">
                 <a href="#" x-on:click.prevent="special_p_selectedTab = 'STE'"
                     class="inline-block w-full p-4 border-r border-gray-200 dark:border-gray-700 hover:text-gray-700 hover:bg-gray-50 :outline-none"
-                    :class="{'active rounded-es-2xl bg-slate-500 text-slate-100 hover:bg-slate-500 hover:text-slate-100 cursor-default': special_p_selectedTab === 'STE'}"
+                    :class="{'active rounded-es-2xl bg-gray-700 text-slate-100 hover:bg-gray-700 hover:text-slate-100 cursor-default': special_p_selectedTab === 'STE'}"
                     aria-current="page">STE Program</a>
             </li>
             <li class="w-full focus-within:z-10">
                 <a href="#" x-on:click.prevent="special_p_selectedTab = 'SPED'"
                     class="inline-block w-full p-4 border-r border-gray-200 dark:border-gray-700 hover:text-gray-700 hover:bg-gray-50 focus:outline-none"
-                    :class="{'active rounded-es-2xl bg-slate-500 text-slate-100 hover:bg-slate-500 hover:text-slate-100 cursor-default': special_p_selectedTab === 'SPED'}">SPED
+                    :class="{'active rounded-es-2xl bg-gray-700 text-slate-100 hover:bg-gray-700 hover:text-slate-100 cursor-default': special_p_selectedTab === 'SPED'}">SPED
                     Program</a>
             </li>
             <li class="w-full focus-within:z-10">
                 <a href="#" x-on:click.prevent="special_p_selectedTab = 'SPJ'"
                     class="inline-block w-full p-4 border-r border-gray-200 dark:border-gray-700 hover:text-gray-700 hover:bg-gray-50 focus:outline-none"
-                    :class="{'active rounded-es-2xl bg-slate-500 text-slate-100 hover:bg-slate-500 hover:text-slate-100 cursor-default': special_p_selectedTab === 'SPJ'}">SPJ Program</a>
+                    :class="{'active rounded-es-2xl bg-gray-700 text-slate-100 hover:bg-gray-700 hover:text-slate-100 cursor-default': special_p_selectedTab === 'SPJ'}">SPJ Program</a>
             </li>
             <li class="w-full focus-within:z-10">
                 <a href="#" x-on:click.prevent="special_p_selectedTab = 'SPA'"
                     class="inline-block w-full p-4 border-r border-gray-200 dark:border-gray-700 hover:text-gray-700 hover:bg-gray-50 focus:outline-none"
-                    :class="{'active rounded-es-2xl bg-slate-500 text-slate-100 hover:bg-slate-500 hover:text-slate-100 cursor-default': special_p_selectedTab === 'SPA'}">SPA
+                    :class="{'active rounded-es-2xl bg-gray-700 text-slate-100 hover:bg-gray-700 hover:text-slate-100 cursor-default': special_p_selectedTab === 'SPA'}">SPA
                     Program</a>
             </li>
         </ul>

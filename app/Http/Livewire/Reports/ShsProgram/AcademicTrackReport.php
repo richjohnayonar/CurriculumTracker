@@ -9,8 +9,9 @@ use Livewire\WithPagination;
 class AcademicTrackReport extends Component
 {
     use WithPagination;
-
     public $search = '';
+
+    protected $listeners = ['deleteRecord'];
  
     public function updatingSearch()
     {
@@ -23,12 +24,19 @@ class AcademicTrackReport extends Component
         return redirect()->to("/{$link}/{$id}");
     }  
     
-    public function deleteAcademicTrack($id){
+    public function deleteRecord($id, $componentIdentifier){
          // Find the Academic Track by ID
+        if($componentIdentifier !== 'acadDelete'){
+            return;
+        }
         $academicTrack = AcademicTrack::findOrFail($id);
         
         // Delete the Academic Track
         $academicTrack->delete();
+        $this->emit('showNotifications', [
+        'type' => 'success',
+        'message' => 'Record Deleted',
+    ]);
     }
 
     public function render()

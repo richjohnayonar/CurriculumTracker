@@ -6,6 +6,7 @@ use App\Http\Livewire\AlsProgram;
 use App\Http\Livewire\ArabicLanguageAndIslamicValuesEduc;
 use App\Http\Livewire\Auth\Login;
 use App\Http\Livewire\Auth\Register;
+use App\Http\Livewire\Dashboard;
 use App\Http\Livewire\Reports\AlsProgram\AlsProgramReport;
 use App\Http\Livewire\Reports\ArabLanguage\ArabLanguageReport;
 use App\Http\Livewire\Reports\ShsProgram\AcademicTrackEdit;
@@ -24,7 +25,6 @@ use App\Http\Livewire\Reports\SpecialCurProgram\SSES\SSESEditReport;
 use App\Http\Livewire\Reports\SpecialCurProgram\SSES\SSESViewReport;
 use App\Http\Livewire\Reports\SpecialCurProgram\STE\STEEditProgramReport;
 use App\Http\Livewire\Reports\SpecialCurProgram\STE\STEViewProgramReport;
-use App\Http\Livewire\School;
 use App\Http\Livewire\SHSProgram;
 use App\Http\Livewire\SpecialCurricularProgram;
 use Illuminate\Support\Facades\Route;
@@ -56,7 +56,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     // Route::get('/als-program', AlsProgram::class);
 });
 Route::middleware(['auth'])->group(function () {
-    Route::get('/', School::class)->name('dashboard');
+    Route::get('/', Dashboard::class)->name('dashboard');
     Route::get('/special-curricular-program', SpecialCurricularProgram::class);
     Route::get('/arabic-language', ArabicLanguageAndIslamicValuesEduc::class);
     Route::get('/als-program', AlsProgram::class);

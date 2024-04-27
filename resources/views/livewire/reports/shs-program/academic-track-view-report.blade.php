@@ -25,14 +25,16 @@
             </li>
         </ol>
     </nav>
+    <h2 class="mb-4 mt-10 text-3xl font-extrabold leading-none tracking-tight text-gray-800 md:text-4xl dark:text-white">
+            {{ $school->name }}</h2>
 
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg border mt-10">
         <div
-            class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 justify-center pb-4 p-4 bg-slate-600 text-slate-50">
-            <p class="font-bold uppercase">School Details</p>
+            class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 justify-between pb-4 p-4 bg-gray-200 text-gray-600">
+            <p class="font-extrabold uppercase">School Details</p>
         </div>
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead class="text-xs text-slate-600 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr class="p-4">
                     <th scope="col" class="px-6 py-3">
                         School ID
@@ -56,7 +58,7 @@
             </thead>
             <tbody>
                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    <td scope="row" class="px-6 py-4">
                         {{ $school->school_id }}
                     </td>
                     <td class="px-6 py-4">
@@ -80,11 +82,11 @@
     </div>
 
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg border mt-8">
-        <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 justify-center pb-4 p-4 bg-slate-600 text-slate-50 uppercase font-bold">
+        <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 justify-between pb-4 p-4 bg-gray-200 text-gray-600 uppercase font-extrabold">
             <p>Total Enrollees and other Details</pc>
         </div>
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead class="text-xs text-slate-600 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr class="p-4">
                     <th scope="col" class="px-6 py-3">
                         Total male Enrolled
@@ -114,7 +116,7 @@
             </thead>
             <tbody>
                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    <td scope="row" class="px-6 py-4">
                         {{ $academicTrack->total_male_enrolled }}
                     </td>
                     <td class="px-6 py-4">
@@ -144,11 +146,11 @@
     </div>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg border mt-8">
         @if(empty($academicTrack->total_dost_passer ))
-            <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 justify-center pb-4 p-4 bg-slate-600 text-slate-50 uppercase font-bold">
+            <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 justify-between pb-4 p-4 bg-gray-200 text-gray-600 uppercase font-extrabold">
                 <p>NO DOST Passers</p>
             </div>
         @else
-            <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 justify-center pb-4 p-4 bg-slate-600 text-slate-50 uppercase font-bold">
+            <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 justify-between pb-4 p-4 bg-gray-200 text-gray-600 uppercase font-extrabold">
                 <p>DOST Passers Lists</p>
             </div>
             <div
@@ -170,7 +172,7 @@
                         <div id="dropdownAction"
                             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                             <div class="py-1">
-                                <a href="#" wire:click.prevent='deleteSelectedDostPassers'
+                                <a href="#" wire:click.prevent="confirmDelete"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-red-600 hover:uppercase hover:font-bold">Delete
                                 </a>
                             </div>

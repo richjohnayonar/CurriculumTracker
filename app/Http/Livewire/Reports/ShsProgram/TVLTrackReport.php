@@ -10,6 +10,8 @@ class TVLTrackReport extends Component
 {
     use WithPagination;
     public $search = '';
+
+    protected $listeners = ['deleteRecord'];
  
     public function updatingSearch()
     {
@@ -22,12 +24,20 @@ class TVLTrackReport extends Component
         return redirect()->to("/{$link}/{$id}");
     }  
 
-    public function deleteTVLTrack($id){
+    public function deleteRecord($id, $componentIdentifier){
+        if($componentIdentifier !== 'tvlDelete'){
+            return;
+        }
          // Find the Academic Track by ID
         $academicTrack = TVLProgramModel::findOrFail($id);
         
         // Delete the Academic Track
         $academicTrack->delete();
+
+        $this->emit('showNotifications', [
+        'type' => 'success',
+        'message' => 'Record Deleted',
+        ]);
     }
 
 

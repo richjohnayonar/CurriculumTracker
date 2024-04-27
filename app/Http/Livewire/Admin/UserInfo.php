@@ -42,6 +42,11 @@ class UserInfo extends Component
         
         // Hide the modal
         $this->isEditModalOpen = false;
+
+        $this->emit('showNotifications', [
+        'type' => 'success',
+        'message' => 'Record Save.',
+        ]);
     }
 
     public function render()

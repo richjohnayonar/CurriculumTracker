@@ -1,5 +1,8 @@
 <div class="max-w-screen-xl mx-auto p-10 m-6 my-16">
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg border mt-8 bg-slate-500">
+    <h2 class="mb-4 mt-8 text-2xl font-extrabold leading-none tracking-tight text-gray-800 md:text-3xl dark:text-white">
+        Arabic Language and Islamic Values Education
+    </h2>
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg border mt-8 bg-gray-200">
         <div
             class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4 p-4">
             <label for="table-search" class="sr-only">Search</label>

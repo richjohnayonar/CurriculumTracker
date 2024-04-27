@@ -1,7 +1,7 @@
 <div>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg border mt-8">
         <div
-            class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4 p-4 bg-slate-500">
+            class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4 p-4 bg-gray-200">
             <label for="table-search" class="sr-only">Search</label>
             <div class="relative">
                 <div

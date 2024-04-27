@@ -2,9 +2,8 @@
    <nav id="navbar" class="fixed top-0 z-40 flex w-full flex-row justify-between bg-gray-700 px-4 sm:-between">
         <!-- Logo -->
         <div class="flex items-center">
-            <p class="text-2xl font-bold text-blue-200 italic font-sans uppercase ">Curriculum Tracker</p>
+            <p class="text-2xl font-bold text-slate-50 italic font-sans uppercase " style="font-family:Georgia, 'Times New Roman', Times, serif">Curriculum Tracker</p>
         </div>
-
         <!-- Navbar toggler button -->
         <button id="btnSidebarToggler" type="button" class="py-4 text-2xl text-white hover:text-gray-200">
             <svg id="navClosed" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"

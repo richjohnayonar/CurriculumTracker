@@ -33,7 +33,12 @@ class AlsProgram extends Component
 
         if($existingRecord){
             // If a record exists, prevent saving the duplicate record
-            dd('Record already exists.');
+              $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'This record already in the database.',
+            ]);
+
+            return;
         }
         
         $alsProgramDB = new als();
@@ -46,6 +51,11 @@ class AlsProgram extends Component
         $alsProgramDB->overall_enrolled = $this->overallEnrolled;
 
         $alsProgramDB->save();
+        
+        $this->emit('showNotifications', [
+        'type' => 'success',
+        'message' => 'Record Save.',
+        ]);
     }
 
     public function render()

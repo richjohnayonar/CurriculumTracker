@@ -54,7 +54,12 @@ class SPEDProgram extends Component
 
         if($existingRecord){
             // If a record exists, prevent saving the duplicate record
-            dd('Record already exists.');
+            $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'This record already in the database.',
+            ]);
+
+            return;
         }
 
         $SSESProgram = new SPEDProgramModel();
@@ -78,6 +83,11 @@ class SPEDProgram extends Component
         }
         // Save the model to the database
         $SSESProgram->save();
+        
+        $this->emit('showNotifications', [
+        'type' => 'success',
+        'message' => 'Record Save.',
+        ]);
     }
 
     public function render()

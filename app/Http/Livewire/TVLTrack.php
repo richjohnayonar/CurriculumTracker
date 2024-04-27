@@ -76,7 +76,12 @@ class TVLTrack extends Component
 
         if($existingRecord){
             // If a record exists, prevent saving the duplicate record
-            dd('Record already exists.');
+              $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'This record already in the database.',
+            ]);
+
+            return;
         }
     
         $TVLTRACK = new TVLProgramModel();
@@ -111,6 +116,11 @@ class TVLTrack extends Component
             // Save the DOST passer to the database
             $ncPasser->save();
         }
+
+            $this->emit('showNotifications', [
+        'type' => 'success',
+        'message' => 'Record Save.',
+        ]);
 
     }
 

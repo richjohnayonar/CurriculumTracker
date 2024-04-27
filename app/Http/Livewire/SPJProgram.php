@@ -44,7 +44,12 @@ class SPJProgram extends Component
 
         if($existingRecord){
             // If a record exists, prevent saving the duplicate record
-            dd('Record already exists.');
+              $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'This record already in the database.',
+            ]);
+
+            return;
         }
 
         $SPJProgram = new SPJProgramModel();
@@ -58,6 +63,11 @@ class SPJProgram extends Component
         $SPJProgram->overall_enrolled = $this->overallEnrolled;
 
         $SPJProgram->save();
+
+        $this->emit('showNotifications', [
+        'type' => 'success',
+        'message' => 'Record Save.',
+        ]);
     }
 
     public function render()

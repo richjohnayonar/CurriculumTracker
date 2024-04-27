@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Reports\ShsProgram;
 use App\Models\AcademicTrack;
 use App\Models\DostPasserName;
 use App\Models\School;
+use Illuminate\Queue\ListenerOptions;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -20,12 +21,17 @@ class AcademicTrackViewReport extends Component
     public $selectAll = false;
     public $search = '';
 
-    public function deleteSelectedDostPassers()
+    protected $listeners = ['deleteRecordPassers'];
+
+    public function confirmDelete(){
+        $this->emit("confirmDeletePassers");
+    }
+    public function deleteRecordPassers()
     {
         // Find the DOST Passers records based on the selected strand
         $dostPassersToDelete = DostPasserName::where('academicTrack_id', $this->academicTrack->id)
-                                ->whereIn('id', $this->selectedDostPassers)
-                                ->get();
+                ->whereIn('id', $this->selectedDostPassers)
+                ->get();
 
         // Delete selected DOST Passers records
         foreach ($dostPassersToDelete as $dostPasser) {
@@ -42,6 +48,10 @@ class AcademicTrackViewReport extends Component
         $this->dostPassers = DostPasserName::where('academicTrack_id', $this->academicTrack->id)->paginate(5);
 
         $this->selectAll = false;
+         $this->emit('showNotifications', [
+        'type' => 'success',
+        'message' => 'Record Deleted',
+        ]);
     }
 
     
@@ -71,6 +81,10 @@ class AcademicTrackViewReport extends Component
             $dostFullName->save();
             // Hide the modal
             $this->emit('hideEditModal');
+            $this->emit('showNotifications', [
+            'type' => 'success',
+            'message' => 'Record Updated.'  ,
+            ]);
     }
 
     public function mount($id)

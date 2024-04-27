@@ -26,14 +26,16 @@
             </li>
         </ol>
     </nav>
+    <h2 class="mb-4 mt-10 text-3xl font-extrabold leading-none tracking-tight text-gray-800 md:text-4xl dark:text-white">
+        {{ $school->name }}</h2>
 
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg border mt-10">
         <div
-            class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 justify-center pb-4 p-4 bg-slate-600 text-slate-50">
+            class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 justify-between pb-4 p-4 bg-white-400 text-gray-700">
             <p class="font-bold uppercase">School Details</p>
         </div>
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead class="text-xs text-slate-600 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr class="p-4">
                     <th scope="col" class="px-6 py-3">
                         School ID
@@ -77,11 +79,11 @@
 
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg border mt-8">
         <div
-            class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 justify-center pb-4 p-4 bg-slate-600 text-slate-50 uppercase font-bold">
+            class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 justify-between pb-4 p-4 bg-white-100 text-gray-700 uppercase font-bold">
             <p>Total Enrollees and other Details</pc>
         </div>
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead class="text-xs text-slate-600 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr class="p-4">
                     <th scope="col" class="px-6 py-3">
                         Total male Enrolled

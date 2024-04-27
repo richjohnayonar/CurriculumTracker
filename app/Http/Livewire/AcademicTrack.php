@@ -66,7 +66,11 @@ class AcademicTrack extends Component
 
     if($existingRecord){
         // If a record exists, prevent saving the duplicate record
-        dd('Record already exists.');
+         $this->emit('showNotifications', [
+        'type' => 'error',
+        'message' => 'This record already in the database.',
+    ]);
+        return;
     }
 
     // If no existing record found or conditions for duplicate entry not met, proceed to create new record
@@ -105,6 +109,10 @@ class AcademicTrack extends Component
         // Save the DOST passer to the database
         $dostPasser->save();
     }
+    $this->emit('showNotifications', [
+        'type' => 'success',
+        'message' => 'Save Succesfully',
+    ]);
 }
 
 

@@ -27,7 +27,7 @@
         </ol>
     </nav>
     <div>
-        <form wire:submit.prevent='update'>
+        <form wire:submit.prevent='confirmUpdate'>
             <div class="mt-6 bg-slate-200 p-10 rounded shadow">
                 <div class="col-span-2">
                     <label for="ScYearStart" class="block mb-2 text-sm font-medium text-gray-900 ">School</label>

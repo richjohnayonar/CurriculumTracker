@@ -28,13 +28,16 @@ class AcademicTrackEdit extends Component
     public $selectedSchool;
     public $school;
 
-    protected $listeners = ['EditAcademicSelect2'];
+    protected $listeners = ['EditAcademicSelect2', 'updateRecord'];
 
     public function EditAcademicSelect2($value)
     {
         $this->selectedSchool = $value;
     }
-    
+    public function confirmUpdate(){
+        $this->emit('confirmUpdate');
+    }
+
     public function mount($id)
     {
         $this->academicTrack = AcademicTrack::findOrFail($id);
@@ -89,7 +92,7 @@ class AcademicTrackEdit extends Component
         return redirect()->to($route);
     } 
     
-    public function update(){
+    public function updateRecord(){
 
         // Find the ALS record to update
         $AcademicDb = AcademicTrack::findOrFail($this->academicTrackId);
@@ -118,8 +121,10 @@ class AcademicTrackEdit extends Component
             
             // Optionally, you can provide feedback to the user that the record has been "updated"
             // For example:
-            session()->flash('message', 'Record updated.');
-            
+            $this->emit('showNotifications', [
+                'type' => 'success',
+                'message' => 'Record updated',
+            ]);
             return;
         }
         
@@ -139,7 +144,12 @@ class AcademicTrackEdit extends Component
             // You can add any specific action here, such as showing an error message
             // or redirecting back with a message indicating the duplicate record.
             // For now, let's just halt further processing.
-            dd('Record already exists with the same attributes.');
+              $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'Failed to update, record alreay exist on database',
+            ]);
+
+            return;
         }
 
          $this->academicTrack->update([
@@ -172,6 +182,11 @@ class AcademicTrackEdit extends Component
                 DostPasserName::create(['academicTrack_id' => $this->academicTrack->id, 'full_name' => $passerData['full_name']]);
             }
         }
+
+         $this->emit('showNotifications', [
+                'type' => 'success',
+                'message' => 'Record updated.',
+            ]);
     }
 
      public function updated(){

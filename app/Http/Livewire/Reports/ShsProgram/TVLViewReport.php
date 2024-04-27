@@ -22,7 +22,13 @@ class TVLViewReport extends Component
 
     protected $NCPassers; // Make dostPassers property protected
 
-    public function deleteSelectedNCPassers()
+    protected $listeners = ['deleteRecordPassers'];
+
+    public function confirmDelete(){
+        $this->emit("confirmDeletePassers");
+    }
+
+    public function deleteRecordPassers()
     {
         // Find the DOST Passers records based on the selected strand
         $NCPassersToDelete = NCPasserName::where('tvlTrack_id', $this->TVLTrack->id)
@@ -44,6 +50,11 @@ class TVLViewReport extends Component
         $this->NCPassers = NCPasserName::where('tvlTrack_id', $this->TVLTrack->id)->paginate(5);
 
         $this->selectAll = false;
+
+        $this->emit('showNotifications', [
+        'type' => 'success',
+        'message' => 'Record Deleted',
+        ]);
     }
 
     public function EditFullName($id){
@@ -61,6 +72,11 @@ class TVLViewReport extends Component
             $NcFullName->save();
             // Hide the modal
             $this->emit('hideEditModal');
+
+            $this->emit('showNotifications', [
+            'type' => 'success',
+            'message' => 'Record Updated.'  ,
+            ]);
     }
 
     public function toggleSelectAll($checked)
@@ -95,12 +111,12 @@ class TVLViewReport extends Component
         $NCPasserQuery = NCPasserName::where('tvlTrack_id', $this->TVLTrack->id);
         $NCPasserQuery->where('full_name', 'like', '%' . $this->search . '%');
         $NCPassers = $NCPasserQuery->paginate(5);
-        $schools = School::all();
+        $school = School::findOrFail($this->TVLTrackID);
 
         
         return view('livewire.reports.shs-program.t-v-l-view-report', [
             'NCPassers'=> $NCPassers,
-            'schools' => $schools,
+            'school' => $school,
         ]);
     }
 }

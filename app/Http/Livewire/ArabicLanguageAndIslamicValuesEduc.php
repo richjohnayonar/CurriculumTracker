@@ -43,7 +43,12 @@ class ArabicLanguageAndIslamicValuesEduc extends Component
 
         if($existingRecord){
             // If a record exists, prevent saving the duplicate record
-            dd('Record already exists.');
+                $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'This record already in the database.',
+            ]);
+
+            return;
         }
         
         $ArabLanguageProg = new ArabicLanguage();
@@ -57,6 +62,11 @@ class ArabicLanguageAndIslamicValuesEduc extends Component
         $ArabLanguageProg->overall_enrolled = $this->overallEnrolled;
 
         $ArabLanguageProg->save();
+
+         $this->emit('showNotifications', [
+        'type' => 'success',
+        'message' => 'Record Save.',
+        ]);
     }
 
     

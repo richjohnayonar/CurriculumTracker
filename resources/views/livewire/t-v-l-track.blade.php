@@ -64,7 +64,7 @@
                             </option>
                             @endif
                             @if($grade_lvl == 'Grade 12')
-                            <option value="Food & Beverage Services (FBS)//Bread &Pastry Production (BPP)">
+                            <option value="Food & Beverage Services (FBS)/Bread &Pastry Production (BPP)">
                                 Food & Beverage Services (FBS)/Bread &Pastry Production (BPP)
                             </option>
                             <option value="Wellness Massage/Beautyt Care (Nail Art)">

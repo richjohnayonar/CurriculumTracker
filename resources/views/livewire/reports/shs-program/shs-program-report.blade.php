@@ -13,14 +13,14 @@
             <li class="w-full focus-within:z-10">
                 <a href="#" x-on:click.prevent="shs_r_selectedTab = 'academic'" 
                     class="inline-block w-full p-4 border-r border-gray-200 dark:border-gray-700 hover:text-gray-700 hover:bg-gray-50 :outline-none"
-                    :class="{'active rounded-es-2xl bg-slate-500 text-slate-100 hover:bg-slate-500 hover:text-slate-100 cursor-default': shs_r_selectedTab === 'academic'}"
+                    :class="{'active rounded-es-2xl bg-gray-700 text-slate-100 hover:bg-gray-700 hover:text-slate-100 cursor-default': shs_r_selectedTab === 'academic'}"
                     aria-current="page"
                     >Academic Track</a>
             </li>
             <li class="w-full focus-within:z-10">
                 <a href="#" x-on:click.prevent="shs_r_selectedTab = 'tvl'" 
                     class="inline-block w-full p-4 border-r border-gray-200 dark:border-gray-700 hover:text-gray-700 hover:bg-gray-50 focus:outline-none"
-                    :class="{'active rounded-es-2xl bg-slate-500 text-slate-100 hover:bg-slate-500 hover:text-slate-100 cursor-default': shs_r_selectedTab === 'tvl'}"
+                    :class="{'active rounded-es-2xl bg-gray-700 text-slate-100 hover:bg-gray-700 hover:text-slate-100 cursor-default': shs_r_selectedTab === 'tvl'}"
                     >TVL
                     TRACK</a>
             </li>

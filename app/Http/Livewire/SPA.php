@@ -43,7 +43,12 @@ class SPA extends Component
 
         if($existingRecord){
             // If a record exists, prevent saving the duplicate record
-            dd('Record already exists.');
+            $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'This record already in the database.',
+            ]);
+
+            return;
         }
 
         $SPA = new SPAModel();
@@ -57,6 +62,11 @@ class SPA extends Component
         $SPA->overall_enrolled = $this->overallEnrolled;
 
         $SPA->save();
+
+         $this->emit('showNotifications', [
+        'type' => 'success',
+        'message' => 'Record Save.',
+        ]);
     }
 
     public function render()

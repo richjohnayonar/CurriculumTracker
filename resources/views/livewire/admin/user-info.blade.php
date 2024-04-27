@@ -1,5 +1,8 @@
 <div class="max-w-screen-xl mx-auto p-10 mt-20">
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-slate-500">
+    <h2 class="mb-4 mt-8 text-2xl font-extrabold leading-none tracking-tight text-gray-800 md:text-3xl dark:text-white">
+       User Informations
+    </h2>
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-gray-200">
         <div
             class="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 dark:bg-gray-900 p-4">
             <label for="table-search" class="sr-only">Search</label>
