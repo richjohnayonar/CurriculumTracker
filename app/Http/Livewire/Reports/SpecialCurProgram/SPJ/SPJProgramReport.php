@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Reports\SpecialCurProgram\SPJ;
 
 use App\Models\SPJProgramModel;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -11,10 +12,22 @@ class SPJProgramReport extends Component
     use WithPagination;
 
     public $search = '';
+    protected $deleteIdentifier = 'DELETESPJ';
 
-    public function deleteSPJTrack($id){
+    protected $listeners = ['deleteRecord'];
+
+    public function deleteRecord($id, $componentIdentifier){
+        if(!Hash::check($this->deleteIdentifier, $componentIdentifier)){
+            return;
+        }
+
         $SPGProgram = SPJProgramModel::findOrFail($id);
         $SPGProgram->delete();
+
+        $this->emit('showNotifications', [
+            'type' => 'success',
+            'message' => 'Record Deleted',
+        ]);
     }
 
     public function navigateTo($link, $id)
@@ -26,6 +39,12 @@ class SPJProgramReport extends Component
     {
         $this->resetPage();
     }
+
+     protected function hashedDeleteIdentifier()
+    {
+        return Hash::make($this->deleteIdentifier);
+    }
+
     
     public function render()
     {
@@ -36,7 +55,8 @@ class SPJProgramReport extends Component
                     ->orWhere('name', 'like', '%' . $this->search . '%');
             })
             ->orWhere('grade_lvl', 'like', '%' . $this->search . '%')
-            ->paginate(5)
+            ->paginate(5),
+            'deleteIdentifier' => $this->hashedDeleteIdentifier(),
         ]);
     }
 }

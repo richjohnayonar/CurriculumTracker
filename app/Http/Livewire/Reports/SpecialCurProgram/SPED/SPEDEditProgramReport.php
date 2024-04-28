@@ -22,12 +22,17 @@ class SPEDEditProgramReport extends Component
     public $pisay_passers;
     public $ste_passers;
 
-    protected $listeners = ['SSESEditSchoolSelect2'];
+    protected $listeners = ['SSESEditSchoolSelect2', 'updateRecord'];
 
     public function SSESEditSchoolSelect2($value)
     {
         $this->selectedSchool = $value;
     }
+
+    public function confirmUpdate(){
+        $this->emit('confirmUpdate');
+    }
+
 
     public function mount($id)
     {
@@ -45,7 +50,7 @@ class SPEDEditProgramReport extends Component
         $this->school=School::findOrFail($this->SPEDProgram->school_id);
         $this->selectedSchool = $this->school->id;
     }
-    public function update(){
+    public function updateRecord(){
 
           // Find the ALS record to update
         $STEDB = SPEDProgramModel::findOrFail($this->SPEDProgramID);
@@ -68,8 +73,10 @@ class SPEDEditProgramReport extends Component
             
             // Optionally, you can provide feedback to the user that the record has been "updated"
             // For example:
-            session()->flash('message', 'Record updated.');
-                
+            $this->emit('showNotifications', [
+                'type' => 'success',
+                'message' => 'Record updated',
+            ]);
             return;
         }
 
@@ -92,7 +99,12 @@ class SPEDEditProgramReport extends Component
 
         if($existingRecord){
             // If a record exists, prevent saving the duplicate record
-            dd('Record already exists.');
+               $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'Failed to update, record alreay exist on database',
+            ]);
+
+            return;
         }
 
         if($this->type_of_learners !== 'Fast Learners'){
@@ -114,6 +126,11 @@ class SPEDEditProgramReport extends Component
             'pisay_passers' => $this->pisay_passers,
             'ste_passers' => $this->ste_passers,
         ]);
+        
+         $this->emit('showNotifications', [
+                'type' => 'success',
+                'message' => 'Record updated.',
+            ]);
     }
 
     public function navigateTo($route)

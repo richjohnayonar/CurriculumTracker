@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Reports\SpecialCurProgram\STE;
 
 use App\Models\STEProgramModel;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,12 +13,24 @@ class STEProgramReport extends Component
 
     public $search = '';
 
-    public function deleteSTETrack($id){
+    protected $listeners = ['deleteRecord'];
+
+    protected $deleteIdentifier = 'steDelete';
+
+    public function deleteRecord($id, $componentIdentifier){
+         if(!Hash::check($this->deleteIdentifier, $componentIdentifier)){
+            return;
+        }
          // Find the Academic Track by ID
         $STEProgram = STEProgramModel::findOrFail($id);
         
         // Delete the Academic Track
         $STEProgram->delete();
+
+        $this->emit('showNotifications', [
+            'type' => 'success',
+            'message' => 'Record Deleted',
+        ]);
     }
 
     public function navigateTo($link, $id)
@@ -31,6 +44,10 @@ class STEProgramReport extends Component
         $this->resetPage();
     }
     
+      protected function hashedDeleteIdentifier()
+    {
+        return Hash::make($this->deleteIdentifier);
+    }
 
     public function render()
     {
@@ -41,7 +58,8 @@ class STEProgramReport extends Component
                     ->orWhere('name', 'like', '%' . $this->search . '%');
             })
             ->orWhere('grade_lvl', 'like', '%' . $this->search . '%')
-            ->paginate(5)
+            ->paginate(5),
+            'deleteIdentifier' => $this->hashedDeleteIdentifier(),
         ]);
     }
 }

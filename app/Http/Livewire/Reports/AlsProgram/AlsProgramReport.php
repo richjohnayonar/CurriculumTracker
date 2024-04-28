@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Reports\AlsProgram;
 
 use App\Models\als;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -11,6 +12,9 @@ class AlsProgramReport extends Component
     use WithPagination;
 
     protected $paginationTheme = 'tailwind';
+
+    protected $listeners = ['deleteRecord', 'updateRecord'];
+    protected $deleteIdentifier = 'alsDelete';
 
     public $search = '';
     public $als;
@@ -23,6 +27,10 @@ class AlsProgramReport extends Component
     public $enrolledFemale;
     public $isEditModalOpen = false;
 
+    public function confirmUpdate(){
+        $this->emit('confirmUpdate');
+    }
+
     public function updated(){
         $this->overallEnrolled = $this->enrolledMale + $this->enrolledFemale;
     }
@@ -31,12 +39,20 @@ class AlsProgramReport extends Component
         $this->isEditModalOpen = false;
     }
 
-    public function deleteAlsRecord($id){
+    public function deleteRecord($id, $componentIdentifier){
+        if(!Hash::check($this->deleteIdentifier, $componentIdentifier)){
+            return;
+        }
          // Find the Academic Track by ID
         $ArabLanguageProg = als::findOrFail($id);
         
         // Delete the Academic Track
         $ArabLanguageProg->delete();
+        
+        $this->emit('showNotifications', [
+            'type' => 'success',
+            'message' => 'Record Deleted',
+        ]);
     }
 
     public function navigateTo($link, $id)
@@ -72,7 +88,7 @@ class AlsProgramReport extends Component
     //             $this->isEditModalOpen = false;
     // }
 
-    public function confirmUpdate()
+    public function updateRecord()
     {
         // Find the ALS record to update
         $alsDB = als::findOrFail($this->alsID);
@@ -97,8 +113,10 @@ class AlsProgramReport extends Component
             
             // Optionally, you can provide feedback to the user that the record has been "updated"
             // For example:
-            session()->flash('message', 'Record updated.');
-            
+            $this->emit('showNotifications', [
+                'type' => 'success',
+                'message' => 'Record updated',
+            ]);
             return;
         }
 
@@ -113,7 +131,12 @@ class AlsProgramReport extends Component
             // You can add any specific action here, such as showing an error message
             // or redirecting back with a message indicating the duplicate record.
             // For now, let's just halt further processing.
-            dd('Record already exists with the same attributes.');
+            $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'Failed to update, record alreay exist on database',
+            ]);
+
+            return;
         }
 
         // Update the ALS record with the new data
@@ -129,7 +152,10 @@ class AlsProgramReport extends Component
         $this->isEditModalOpen = false;
 
         // Optionally, you can provide feedback to the user that the record has been updated
-        session()->flash('message', 'Record updated.');
+        $this->emit('showNotifications', [
+                'type' => 'success',
+                'message' => 'Record updated.',
+        ]);
     }
 
 
@@ -138,11 +164,18 @@ class AlsProgramReport extends Component
         $this->resetPage();
     }
 
+      protected function hashedDeleteIdentifier()
+    {
+        return Hash::make($this->deleteIdentifier);
+    }
+
+
     public function render()
     {
         return view('livewire.reports.als-program.als-program-report', [
         'alss' => als::where('school_lvl', 'like', '%' . $this->search . '%')
-            ->paginate(5),
+        ->paginate(5),
+        'deleteIdentifier' => $this->hashedDeleteIdentifier(),
         ]);
     }
 }

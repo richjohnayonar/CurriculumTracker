@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Reports\ShsProgram;
 
 use App\Models\TVLProgramModel;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,6 +13,8 @@ class TVLTrackReport extends Component
     public $search = '';
 
     protected $listeners = ['deleteRecord'];
+
+    protected $deleteIdentifier = 'tvlDelete';
  
     public function updatingSearch()
     {
@@ -25,7 +28,7 @@ class TVLTrackReport extends Component
     }  
 
     public function deleteRecord($id, $componentIdentifier){
-        if($componentIdentifier !== 'tvlDelete'){
+         if(!Hash::check($this->deleteIdentifier, $componentIdentifier)){
             return;
         }
          // Find the Academic Track by ID
@@ -40,6 +43,11 @@ class TVLTrackReport extends Component
         ]);
     }
 
+    protected function hashedDeleteIdentifier()
+    {
+        return Hash::make($this->deleteIdentifier);
+    }
+
 
     public function render()
     {
@@ -50,7 +58,8 @@ class TVLTrackReport extends Component
                     ->orWhere('name', 'like', '%' . $this->search . '%');
             })
             ->orWhere('specialization', 'like', '%' . $this->search . '%')
-            ->paginate(5)
+            ->paginate(5),
+            'deleteIdentifier' => $this->hashedDeleteIdentifier(),
         ]);
     }
 }

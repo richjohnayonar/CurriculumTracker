@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Reports\SpecialCurProgram\SPED;
 
 use App\Models\SPEDProgramModel;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,12 +13,24 @@ class SPEDProgramReport extends Component
 
     public $search = '';
 
-    public function deleteSPEDTrack($id){
+    protected $listeners = ['deleteRecord'];
+    protected $deleteIdentifier = 'spedDelete';
+
+    public function deleteRecord($id, $componentIdentifier){
+        if(!Hash::check($this->deleteIdentifier, $componentIdentifier)){
+            return;
+        }
+
          // Find the Academic Track by ID
         $SPEDProgram = SPEDProgramModel::findOrFail($id);
         
         // Delete the Academic Track
         $SPEDProgram->delete();
+
+          $this->emit('showNotifications', [
+        'type' => 'success',
+        'message' => 'Record Deleted',
+        ]);
     }
 
     public function navigateTo($link, $id)
@@ -31,6 +44,13 @@ class SPEDProgramReport extends Component
         $this->resetPage();
     }
 
+       
+    protected function hashedDeleteIdentifier()
+    {
+        return Hash::make($this->deleteIdentifier);
+    }
+
+
     public function render()
     {
         return view('livewire.reports.special-cur-program.s-p-e-d.s-p-e-d-program-report', [
@@ -40,7 +60,8 @@ class SPEDProgramReport extends Component
                     ->orWhere('name', 'like', '%' . $this->search . '%');
             })
             ->orWhere('type_of_learners', 'like', '%' . $this->search . '%')
-            ->paginate(5)
+            ->paginate(5),
+            'deleteIdentifier' => $this->hashedDeleteIdentifier(),
         ]);
     }
 }

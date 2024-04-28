@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Reports\ArabLanguage;
 
 use App\Models\ArabicLanguage;
 use App\Models\School;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -21,8 +22,14 @@ class ArabLanguageReport extends Component
     public $enrolledFemale;
     public $selectedSchool;
     public $isEditModalOpen = false;
+    
+    protected $deleteIdentifier = 'arabDelete';
 
-     protected $listeners = ['EditAcademicSelect2'];
+    protected $listeners = ['EditAcademicSelect2', 'deleteRecord', 'updateRecord'];
+
+    public function confirmUpdate(){
+        $this->emit('confirmUpdate');
+    }
 
     public function EditAcademicSelect2($value)
     {
@@ -36,12 +43,22 @@ class ArabLanguageReport extends Component
     public function closeModal(){
         $this->isEditModalOpen = false;
     }
-    public function deleteArabLangTrack($id){
+
+    public function deleteRecord($id, $componentIdentifier){
+        if(!Hash::check($this->deleteIdentifier, $componentIdentifier)){
+            return;
+        }
+
          // Find the Academic Track by ID
         $ArabLanguageProg = ArabicLanguage::findOrFail($id);
         
         // Delete the Academic Track
         $ArabLanguageProg->delete();
+
+        $this->emit('showNotifications', [
+            'type' => 'success',
+            'message' => 'Record Deleted',
+        ]);
     }
 
     public function navigateTo($link, $id)
@@ -49,8 +66,8 @@ class ArabLanguageReport extends Component
         // Navigate to the specified route
         return redirect()->to("/{$link}/{$id}");
     } 
-
-     public function EditArabIslamLang($id){
+     
+    public function EditArabIslamLang($id){
         $arabIslam =  ArabicLanguage::findOrFail( $id);
         $this->selectedSchool = $arabIslam->school_id;
         $this->ArabIslamID = $id;
@@ -63,7 +80,7 @@ class ArabLanguageReport extends Component
         $this->isEditModalOpen = true;
     }
     
-    public function confirmUpdate()
+    public function updateRecord()
     {
 
           // Find the ALS record to update
@@ -90,8 +107,10 @@ class ArabLanguageReport extends Component
             
             // Optionally, you can provide feedback to the user that the record has been "updated"
             // For example:
-            session()->flash('message', 'Record updated.');
-                
+            $this->emit('showNotifications', [
+                'type' => 'success',
+                'message' => 'Record updated',
+            ]);
             return;
         }
 
@@ -110,7 +129,12 @@ class ArabLanguageReport extends Component
             // You can add any specific action here, such as showing an error message
             // or redirecting back with a message indicating the duplicate record.
             // For now, let's just halt further processing.
-            dd('Record already exists with the same attributes.');
+            $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'Failed to update, record alreay exist on database',
+            ]);
+
+            return;
         }
         
         // Update the full name in the database
@@ -125,12 +149,23 @@ class ArabLanguageReport extends Component
             $ArabIslamDB->save();
             // Hide the modal
             $this->isEditModalOpen = false;
+
+            $this->emit('showNotifications', [
+                'type' => 'success',
+                'message' => 'Record updated.',
+            ]);
     }
     
       public function updatingSearch()
     {
         $this->resetPage();
     }
+
+      protected function hashedDeleteIdentifier()
+    {
+        return Hash::make($this->deleteIdentifier);
+    }
+
 
     public function render()
     {
@@ -143,6 +178,7 @@ class ArabLanguageReport extends Component
             })
             ->orWhere('grade_lvl', 'like', '%' . $this->search . '%')
             ->paginate(5),
+        'deleteIdentifier' => $this->hashedDeleteIdentifier(),
         'schools' => $schools,
         ]);
     }

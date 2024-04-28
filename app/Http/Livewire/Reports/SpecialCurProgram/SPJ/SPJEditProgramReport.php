@@ -19,7 +19,12 @@ class SPJEditProgramReport extends Component
     public $total_female_enrolled;
     public $overall_enrolled;
     
-    protected $listeners = ['SSESEditSchoolSelect2'];
+    protected $listeners = ['SSESEditSchoolSelect2', 'updateRecord'];
+
+    public function confirmUpdate(){
+        $this->emit('confirmUpdate');
+    }
+
 
     public function SSESEditSchoolSelect2($value)
     {
@@ -40,7 +45,7 @@ class SPJEditProgramReport extends Component
         $this->selectedSchool = $this->school->id;
     }
 
-     public function update(){
+     public function updateRecord(){
 
           $SPJDB = SPJProgramModel::findOrFail($this->SPJProgramID);
 
@@ -62,8 +67,10 @@ class SPJEditProgramReport extends Component
             
             // Optionally, you can provide feedback to the user that the record has been "updated"
             // For example:
-            session()->flash('message', 'Record updated.');
-                
+            $this->emit('showNotifications', [
+                'type' => 'success',
+                'message' => 'Record updated',
+            ]);
             return;
         }
 
@@ -79,7 +86,12 @@ class SPJEditProgramReport extends Component
 
         if($existingRecord){
             // If a record exists, prevent saving the duplicate record
-            dd('Record already exists.');
+            $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'Failed to update, record alreay exist on database',
+            ]);
+            
+            return;
         }
         
          $this->SPJProgram->update([
@@ -90,6 +102,11 @@ class SPJEditProgramReport extends Component
             'no_enrolled_male_stud' => $this->total_male_enrolled,
             'no_enrolled_female_stud' => $this->total_female_enrolled,
             'overall_enrolled' => $this->overall_enrolled,
+        ]);
+
+        $this->emit('showNotifications', [
+                'type' => 'success',
+                'message' => 'Record updated',
         ]);
     }
 

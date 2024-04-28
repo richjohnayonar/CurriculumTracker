@@ -21,11 +21,15 @@ class SSESEditReport extends Component
     public $pisay_passers;
     public $ste_passers;
 
-    protected $listeners = ['SSESEditSchoolSelect2'];
+    protected $listeners = ['SSESEditSchoolSelect2', 'updateRecord'];
 
     public function SSESEditSchoolSelect2($value)
     {
         $this->selectedSchool = $value;
+    }
+
+    public function confirmUpdate(){
+        $this->emit('confirmUpdate');
     }
 
     public function mount($id)
@@ -44,7 +48,7 @@ class SSESEditReport extends Component
         $this->selectedSchool = $this->school->id;
     }
 
-      public function update(){
+      public function updateRecord(){
 
          // Find the ALS record to update
         $SSESDB = SSESProgramModel::findOrFail($this->SSESID);
@@ -67,8 +71,10 @@ class SSESEditReport extends Component
             
             // Optionally, you can provide feedback to the user that the record has been "updated"
             // For example:
-            session()->flash('message', 'Record updated.');
-                
+             $this->emit('showNotifications', [
+                'type' => 'success',
+                'message' => 'Record updated',
+            ]);
             return;
         }
 
@@ -84,7 +90,12 @@ class SSESEditReport extends Component
 
         if($existingRecord){
             // If a record exists, prevent saving the duplicate record
-            dd('Record already exists.');
+              $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'Failed to update, record alreay exist on database',
+            ]);
+
+            return;
         }
 
         if($this->grade_lvl !== 'Grade 6'){
@@ -101,6 +112,11 @@ class SSESEditReport extends Component
             'overall_enrolled' => $this->overall_enrolled,
             'pisay_passers' => $this->pisay_passers,
             'ste_passers' => $this->ste_passers,
+        ]);
+
+        $this->emit('showNotifications', [
+                'type' => 'success',
+                'message' => 'Record updated.',
         ]);
     }
 

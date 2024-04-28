@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Reports\SpecialCurProgram\SSES;
 
 use App\Models\SSESProgramModel;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -11,13 +12,26 @@ class SSESReport extends Component
     use WithPagination;
 
     public $search = '';
+    
+    protected $listeners = ['deleteRecord'];
 
-    public function deleteSSESTrack($id){
+    protected $deleteIdentifier = 'ssesDelete';
+
+    public function deleteRecord($id, $componentIdentifier){
+        if(!Hash::check($this->deleteIdentifier, $componentIdentifier)){
+            return;
+        }
+
          // Find the Academic Track by ID
         $SSESProgram = SSESProgramModel::findOrFail($id);
         
         // Delete the Academic Track
         $SSESProgram->delete();
+
+        $this->emit('showNotifications', [
+            'type' => 'success',
+            'message' => 'Record Deleted',
+        ]);
     }
 
     public function navigateTo($link, $id)
@@ -31,6 +45,11 @@ class SSESReport extends Component
         $this->resetPage();
     }
 
+      protected function hashedDeleteIdentifier()
+    {
+        return Hash::make($this->deleteIdentifier);
+    }
+
     public function render()
     {
         return view('livewire.reports.special-cur-program.s-s-e-s.s-s-e-s-report', [
@@ -40,7 +59,8 @@ class SSESReport extends Component
                     ->orWhere('name', 'like', '%' . $this->search . '%');
             })
             ->orWhere('grade_lvl', 'like', '%' . $this->search . '%')
-            ->paginate(5)
+            ->paginate(5),
+            'deleteIdentifier' => $this->hashedDeleteIdentifier(),
         ]);
     }
 }

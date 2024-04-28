@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Reports\ShsProgram;
 
 use App\Models\AcademicTrack;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,6 +13,8 @@ class AcademicTrackReport extends Component
     public $search = '';
 
     protected $listeners = ['deleteRecord'];
+
+    protected $deleteIdentifier = 'academicDelete';
  
     public function updatingSearch()
     {
@@ -25,19 +28,27 @@ class AcademicTrackReport extends Component
     }  
     
     public function deleteRecord($id, $componentIdentifier){
-         // Find the Academic Track by ID
-        if($componentIdentifier !== 'acadDelete'){
+        if(!Hash::check($this->deleteIdentifier, $componentIdentifier)){
             return;
         }
+
+         // Find the Academic Track by ID
         $academicTrack = AcademicTrack::findOrFail($id);
         
         // Delete the Academic Track
         $academicTrack->delete();
         $this->emit('showNotifications', [
-        'type' => 'success',
-        'message' => 'Record Deleted',
-    ]);
+            'type' => 'success',
+            'message' => 'Record Deleted',
+        ]);
     }
+
+    
+    protected function hashedDeleteIdentifier()
+    {
+        return Hash::make($this->deleteIdentifier);
+    }
+
 
     public function render()
     {
@@ -48,7 +59,8 @@ class AcademicTrackReport extends Component
                     ->orWhere('name', 'like', '%' . $this->search . '%');
             })
             ->orWhere('strand', 'like', '%' . $this->search . '%')
-            ->paginate(5)
+            ->paginate(5),
+            'deleteIdentifier' => $this->hashedDeleteIdentifier(),
         ]);
 
     }
