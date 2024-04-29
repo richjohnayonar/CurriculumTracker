@@ -32,6 +32,11 @@ class AlsProgramReport extends Component
     }
 
     public function updated(){
+        if($this->enrolledMale === ''){
+            $this->enrolledMale = 0;
+        }elseif($this->enrolledFemale === ''){
+            $this->enrolledFemale = 0;
+        }
         $this->overallEnrolled = $this->enrolledMale + $this->enrolledFemale;
     }
 
@@ -90,72 +95,80 @@ class AlsProgramReport extends Component
 
     public function updateRecord()
     {
-        // Find the ALS record to update
-        $alsDB = als::findOrFail($this->alsID);
+        try{
+            // Find the ALS record to update
+            $alsDB = als::findOrFail($this->alsID);
 
-        // Check if any changes have been made
-        $changesMade = 
-            $alsDB->school_lvl != $this->school_lvl ||
-            $alsDB->school_year_start != $this->scYearStart ||
-            $alsDB->school_year_end != $this->scYearEnd ||
-            $alsDB->no_enrolled_male_stud != $this->enrolledMale ||
-            $alsDB->no_enrolled_female_stud != $this->enrolledFemale ||
-            $alsDB->overall_enrolled != $this->overallEnrolled;
+            // Check if any changes have been made
+            $changesMade = 
+                $alsDB->school_lvl != $this->school_lvl ||
+                $alsDB->school_year_start != $this->scYearStart ||
+                $alsDB->school_year_end != $this->scYearEnd ||
+                $alsDB->no_enrolled_male_stud != $this->enrolledMale ||
+                $alsDB->no_enrolled_female_stud != $this->enrolledFemale ||
+                $alsDB->overall_enrolled != $this->overallEnrolled;
 
-        // If no changes have been made, proceed with updating the record without further checks
-        if (!$changesMade) {
-            // Update the ALS record to mark as "updated" even if there are no actual changes
-            $alsDB->touch(); // Update the timestamp to mark as updated
+            // If no changes have been made, proceed with updating the record without further checks
+            if (!$changesMade) {
+                // Update the ALS record to mark as "updated" even if there are no actual changes
+                $alsDB->touch(); // Update the timestamp to mark as updated
+                $alsDB->save();
+                
+                // Hide the modal
+                $this->isEditModalOpen = false;
+                
+                // Optionally, you can provide feedback to the user that the record has been "updated"
+                // For example:
+                $this->emit('showNotifications', [
+                    'type' => 'success',
+                    'message' => 'Record updated',
+                ]);
+                return;
+            }
+
+            // Check if there's an existing record with the same attributes excluding the ID being updated
+            $existingRecord = als::where('id', '!=', $this->alsID)
+                ->where('school_lvl', $this->school_lvl)
+                ->whereYear('school_year_start', $this->scYearStart)
+                ->first();
+
+            // If an existing record is found, prevent updating with the same data
+            if ($existingRecord) {
+                // You can add any specific action here, such as showing an error message
+                // or redirecting back with a message indicating the duplicate record.
+                // For now, let's just halt further processing.
+                $this->emit('showNotifications', [
+                    'type' => 'error',
+                    'message' => 'Failed to update, record alreay exist on database',
+                ]);
+
+                return;
+            }
+
+            // Update the ALS record with the new data
+            $alsDB->school_lvl = $this->school_lvl;
+            $alsDB->school_year_start = $this->scYearStart;
+            $alsDB->school_year_end = $this->scYearEnd;
+            $alsDB->no_enrolled_male_stud = $this->enrolledMale;
+            $alsDB->no_enrolled_female_stud = $this->enrolledFemale;
+            $alsDB->overall_enrolled = $this->overallEnrolled;
             $alsDB->save();
-            
+
             // Hide the modal
             $this->isEditModalOpen = false;
-            
-            // Optionally, you can provide feedback to the user that the record has been "updated"
-            // For example:
+
+            // Optionally, you can provide feedback to the user that the record has been updated
             $this->emit('showNotifications', [
-                'type' => 'success',
-                'message' => 'Record updated',
+                    'type' => 'success',
+                    'message' => 'Record updated.',
             ]);
-            return;
-        }
-
-        // Check if there's an existing record with the same attributes excluding the ID being updated
-        $existingRecord = als::where('id', '!=', $this->alsID)
-            ->where('school_lvl', $this->school_lvl)
-            ->whereYear('school_year_start', $this->scYearStart)
-            ->first();
-
-        // If an existing record is found, prevent updating with the same data
-        if ($existingRecord) {
-            // You can add any specific action here, such as showing an error message
-            // or redirecting back with a message indicating the duplicate record.
-            // For now, let's just halt further processing.
+        }catch (\Exception $e){
+            // Catch any exceptions
             $this->emit('showNotifications', [
                 'type' => 'error',
-                'message' => 'Failed to update, record alreay exist on database',
+                'message' => 'Internal Server Error',
             ]);
-
-            return;
         }
-
-        // Update the ALS record with the new data
-        $alsDB->school_lvl = $this->school_lvl;
-        $alsDB->school_year_start = $this->scYearStart;
-        $alsDB->school_year_end = $this->scYearEnd;
-        $alsDB->no_enrolled_male_stud = $this->enrolledMale;
-        $alsDB->no_enrolled_female_stud = $this->enrolledFemale;
-        $alsDB->overall_enrolled = $this->overallEnrolled;
-        $alsDB->save();
-
-        // Hide the modal
-        $this->isEditModalOpen = false;
-
-        // Optionally, you can provide feedback to the user that the record has been updated
-        $this->emit('showNotifications', [
-                'type' => 'success',
-                'message' => 'Record updated.',
-        ]);
     }
 
 

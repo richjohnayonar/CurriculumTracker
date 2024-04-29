@@ -61,11 +61,20 @@ class CreateSchool extends Component
             $school->school_id = $validatedData['school_school_id'];
             $school->name = $validatedData['name'];
             $school->save();
+
+            $this->emit('showNotifications', [
+            'type' => 'success',
+            'message' => 'School Updated',
+        ]);
         } else {
             School::create([
                 'school_id' => $validatedData['school_school_id'],
                 'name' => $validatedData['name'],
             ]);
+            $this->emit('showNotifications', [
+            'type' => 'success',
+            'message' => 'School Added',
+        ]);
         }
 
         // Hide the modal

@@ -25,48 +25,62 @@ class SPA extends Component
     }
 
     public function updated(){
+        if($this->enrolledMale === ''){
+            $this->enrolledMale = 0;
+        }elseif($this->enrolledFemale === ''){
+            $this->enrolledFemale = 0;
+        }
         $this->overallEnrolled = $this->enrolledMale + $this->enrolledFemale;
     }
 
     public function savePost(){
-        $userId = Auth::id();
-        
-        // Extract year from the input date
-        $inputYear = date('Y', strtotime($this->scYearStart));
+        try{
+            $userId = Auth::id();
+            
+            // Extract year from the input date
+            $inputYear = date('Y', strtotime($this->scYearStart));
 
-         // Check if there's an existing record with the same user_id, school_id, and school_year_start
-        $existingRecord = SPAModel::where('user_id', $userId)
-            ->where('school_id', $this->selectedSchool)
-            ->where('grade_lvl', $this->grade_lvl)
-            ->whereYear('school_year_start', $inputYear)
-            ->first();
+            // Check if there's an existing record with the same user_id, school_id, and school_year_start
+            $existingRecord = SPAModel::where('user_id', $userId)
+                ->where('school_id', $this->selectedSchool)
+                ->where('grade_lvl', $this->grade_lvl)
+                ->whereYear('school_year_start', $inputYear)
+                ->first();
 
-        if($existingRecord){
-            // If a record exists, prevent saving the duplicate record
+            if($existingRecord){
+                // If a record exists, prevent saving the duplicate record
+                $this->emit('showNotifications', [
+                    'type' => 'error',
+                    'message' => 'This record already in the database.',
+                ]);
+
+                return;
+            }
+
+            $SPA = new SPAModel();
+            $SPA->school_id = $this->selectedSchool;
+            $SPA->user_id = $userId;
+            $SPA->grade_lvl = $this->grade_lvl;
+            $SPA->school_year_start = $this->scYearStart;
+            $SPA->school_year_end = $this->scYearEnd;
+            $SPA->no_enrolled_male_stud = $this->enrolledMale;
+            $SPA->no_enrolled_female_stud = $this->enrolledFemale;
+            $SPA->overall_enrolled = $this->overallEnrolled;
+
+            $SPA->save();
+
+            $this->emit('showNotifications', [
+            'type' => 'success',
+            'message' => 'Record Save.',
+            ]);
+            $this->reset();
+            }catch (\Exception $e){
+            // Catch any exceptions
             $this->emit('showNotifications', [
                 'type' => 'error',
-                'message' => 'This record already in the database.',
+                'message' => 'Internal Server Error',
             ]);
-
-            return;
         }
-
-        $SPA = new SPAModel();
-        $SPA->school_id = $this->selectedSchool;
-        $SPA->user_id = $userId;
-        $SPA->grade_lvl = $this->grade_lvl;
-        $SPA->school_year_start = $this->scYearStart;
-        $SPA->school_year_end = $this->scYearEnd;
-        $SPA->no_enrolled_male_stud = $this->enrolledMale;
-        $SPA->no_enrolled_female_stud = $this->enrolledFemale;
-        $SPA->overall_enrolled = $this->overallEnrolled;
-
-        $SPA->save();
-
-         $this->emit('showNotifications', [
-        'type' => 'success',
-        'message' => 'Record Save.',
-        ]);
     }
 
     public function render()

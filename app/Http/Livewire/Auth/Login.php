@@ -12,17 +12,23 @@ class Login extends Component
 
     public function login()
     {
-        $this->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        try {
+            $this->validate([
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
 
-        if (Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
-            // Authentication passed
-            return redirect()->intended('/');
-        } else {
-            // Authentication failed
-            session()->flash('error', 'Invalid credentials.');
+            if (Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
+                // Authentication passed
+                $this->emit('showToast', ['type' => 'success', 'message' => 'Logged in.']);
+                return redirect()->intended('/');
+            } else {
+                // Authentication failed
+                throw new \Exception('Invalid credentials.');
+            }
+        } catch (\Exception $e) {
+            // Catch any exceptions
+            $this->emit('showToast', ['type' => 'error', 'message' => 'Internal Server Error']);
         }
     }
     

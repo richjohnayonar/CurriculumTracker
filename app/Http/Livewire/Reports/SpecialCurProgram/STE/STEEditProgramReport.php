@@ -45,7 +45,8 @@ class STEEditProgramReport extends Component
         $this->selectedSchool = $this->school->id;
     }
 
-    public function update(){
+    public function updateRecord(){
+        try{
           // Find the ALS record to update
         $STEDB = STEProgramModel::findOrFail($this->STEProgramID);
 
@@ -109,6 +110,13 @@ class STEEditProgramReport extends Component
                 'type' => 'success',
                 'message' => 'Record updated',
             ]);
+        }catch (\Exception $e){
+            // Catch any exceptions
+            $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'Internal Server Error',
+            ]);
+        }
     }
 
     
@@ -119,6 +127,11 @@ class STEEditProgramReport extends Component
     } 
 
      public function updated(){
+        if($this->total_male_enrolled === ''){
+            $this->total_male_enrolled = 0;
+        }elseif($this->total_female_enrolled === ''){
+            $this->total_female_enrolled = 0;
+        }
         $this->overall_enrolled = $this->total_male_enrolled + $this->total_female_enrolled;
     }
     

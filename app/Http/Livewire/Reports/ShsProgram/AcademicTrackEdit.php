@@ -93,7 +93,7 @@ class AcademicTrackEdit extends Component
     } 
     
     public function updateRecord(){
-
+        try{
         // Find the ALS record to update
         $AcademicDb = AcademicTrack::findOrFail($this->academicTrackId);
 
@@ -187,9 +187,21 @@ class AcademicTrackEdit extends Component
                 'type' => 'success',
                 'message' => 'Record updated.',
             ]);
+        }catch (\Exception $e){
+            // Catch any exceptions
+            $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'Internal Server Error',
+            ]);
+        }
     }
 
      public function updated(){
+        if($this->total_male_enrolled === ''){
+            $this->total_male_enrolled = 0;
+        }elseif($this->total_female_enrolled === ''){
+            $this->total_female_enrolled = 0;
+        }
         $this->overall_enrolled = $this->total_male_enrolled + $this->total_female_enrolled;
     }
 

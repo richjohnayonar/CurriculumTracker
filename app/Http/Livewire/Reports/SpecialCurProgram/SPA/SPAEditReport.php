@@ -45,6 +45,7 @@ class SPAEditReport extends Component
     }
 
     public function updateRecord(){
+        try{
 
           // Find the ALS record to update
         $SPADB = SPAModel::findOrFail($this->SPAID);
@@ -106,6 +107,13 @@ class SPAEditReport extends Component
                 'type' => 'success',
                 'message' => 'Record updated',
             ]);
+        }catch (\Exception $e){
+            // Catch any exceptions
+            $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'Internal Server Error',
+            ]);
+        }
     }
 
      public function navigateTo($route)
@@ -115,6 +123,11 @@ class SPAEditReport extends Component
     } 
 
      public function updated(){
+        if($this->total_male_enrolled === ''){
+            $this->total_male_enrolled = 0;
+        }elseif($this->total_female_enrolled === ''){
+            $this->total_female_enrolled = 0;
+        }
         $this->overall_enrolled = $this->total_male_enrolled + $this->total_female_enrolled;
     }
 

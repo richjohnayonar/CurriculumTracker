@@ -25,49 +25,63 @@ class STEProgram extends Component
     }
 
     public function updated(){
+        if($this->enrolledMale === ''){
+            $this->enrolledMale = 0;
+        }elseif($this->enrolledFemale === ''){
+            $this->enrolledFemale = 0;
+        }
         $this->overallEnrolled = $this->enrolledMale + $this->enrolledFemale;
     }
 
       public function savePost(){
         
-        $userId = Auth::id();
+        try{
+            $userId = Auth::id();
 
-         // Extract year from the input date
-        $inputYear = date('Y', strtotime($this->scYearStart));
+            // Extract year from the input date
+            $inputYear = date('Y', strtotime($this->scYearStart));
 
-        // Check if there's an existing record with the same user_id, school_id, and school_year_start
-        $existingRecord = STEProgramModel::where('user_id', $userId)
-            ->where('school_id', $this->selectedSchool)
-            ->where('grade_lvl', $this->grade_lvl)
-            ->whereYear('school_year_start', $inputYear)
-            ->first();
+            // Check if there's an existing record with the same user_id, school_id, and school_year_start
+            $existingRecord = STEProgramModel::where('user_id', $userId)
+                ->where('school_id', $this->selectedSchool)
+                ->where('grade_lvl', $this->grade_lvl)
+                ->whereYear('school_year_start', $inputYear)
+                ->first();
 
-        if($existingRecord){
-            // If a record exists, prevent saving the duplicate record
-              $this->emit('showNotifications', [
-                'type' => 'error',
-                'message' => 'This record already in the database.',
+            if($existingRecord){
+                // If a record exists, prevent saving the duplicate record
+                $this->emit('showNotifications', [
+                    'type' => 'error',
+                    'message' => 'This record already in the database.',
+                ]);
+
+                return;
+            }
+
+            $SSESProgram = new STEProgramModel();
+            $SSESProgram->school_id = $this->selectedSchool;
+            $SSESProgram->user_id = $userId;
+            $SSESProgram->grade_lvl = $this->grade_lvl;
+            $SSESProgram->school_year_start = $this->scYearStart;
+            $SSESProgram->school_year_end = $this->scYearEnd;
+            $SSESProgram->no_enrolled_male_stud = $this->enrolledMale;
+            $SSESProgram->no_enrolled_female_stud = $this->enrolledFemale;
+            $SSESProgram->overall_enrolled = $this->overallEnrolled;
+
+            $SSESProgram->save();
+
+            $this->emit('showNotifications', [
+            'type' => 'success',
+            'message' => 'Record Save.',
             ]);
-
-            return;
+            $this->reset();
+        }catch (\Exception $e){
+            // Catch any exceptions
+            $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'Internal Server Error',
+            ]);
         }
-
-        $SSESProgram = new STEProgramModel();
-        $SSESProgram->school_id = $this->selectedSchool;
-        $SSESProgram->user_id = $userId;
-        $SSESProgram->grade_lvl = $this->grade_lvl;
-        $SSESProgram->school_year_start = $this->scYearStart;
-        $SSESProgram->school_year_end = $this->scYearEnd;
-        $SSESProgram->no_enrolled_male_stud = $this->enrolledMale;
-        $SSESProgram->no_enrolled_female_stud = $this->enrolledFemale;
-        $SSESProgram->overall_enrolled = $this->overallEnrolled;
-
-        $SSESProgram->save();
-
-          $this->emit('showNotifications', [
-        'type' => 'success',
-        'message' => 'Record Save.',
-        ]);
     }
     
     public function render()

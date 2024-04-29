@@ -1,4 +1,4 @@
-<div class="max-w-screen-xl mx-auto p-10 mt-20">
+<div class="max-w-screen-xl mx-auto p-10 mt-8">
     <h2 class="mb-4 mt-8 text-2xl font-extrabold leading-none tracking-tight text-gray-800 md:text-3xl dark:text-white">
        User Informations
     </h2>

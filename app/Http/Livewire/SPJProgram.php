@@ -25,49 +25,62 @@ class SPJProgram extends Component
     }
 
     public function updated(){
+        if($this->enrolledMale === ''){
+            $this->enrolledMale = 0;
+        }elseif($this->enrolledFemale === ''){
+            $this->enrolledFemale = 0;
+        }
         $this->overallEnrolled = $this->enrolledMale + $this->enrolledFemale;
     }
     
      public function savePost(){
-        
-        $userId = Auth::id();
+        try{
+            $userId = Auth::id();
 
-        // Extract year from the input date
-        $inputYear = date('Y', strtotime($this->scYearStart));
+            // Extract year from the input date
+            $inputYear = date('Y', strtotime($this->scYearStart));
 
-        // Check if there's an existing record with the same user_id, school_id, and school_year_start
-        $existingRecord = SPJProgramModel::where('user_id', $userId)
-            ->where('school_id', $this->selectedSchool)
-            ->where('grade_lvl', $this->grade_lvl)
-            ->whereYear('school_year_start', $inputYear)
-            ->first();
+            // Check if there's an existing record with the same user_id, school_id, and school_year_start
+            $existingRecord = SPJProgramModel::where('user_id', $userId)
+                ->where('school_id', $this->selectedSchool)
+                ->where('grade_lvl', $this->grade_lvl)
+                ->whereYear('school_year_start', $inputYear)
+                ->first();
 
-        if($existingRecord){
-            // If a record exists, prevent saving the duplicate record
-              $this->emit('showNotifications', [
-                'type' => 'error',
-                'message' => 'This record already in the database.',
+            if($existingRecord){
+                // If a record exists, prevent saving the duplicate record
+                $this->emit('showNotifications', [
+                    'type' => 'error',
+                    'message' => 'This record already in the database.',
+                ]);
+
+                return;
+            }
+
+            $SPJProgram = new SPJProgramModel();
+            $SPJProgram->school_id = $this->selectedSchool;
+            $SPJProgram->user_id = $userId;
+            $SPJProgram->grade_lvl = $this->grade_lvl;
+            $SPJProgram->school_year_start = $this->scYearStart;
+            $SPJProgram->school_year_end = $this->scYearEnd;
+            $SPJProgram->no_enrolled_male_stud = $this->enrolledMale;
+            $SPJProgram->no_enrolled_female_stud = $this->enrolledFemale;
+            $SPJProgram->overall_enrolled = $this->overallEnrolled;
+
+            $SPJProgram->save();
+
+            $this->emit('showNotifications', [
+            'type' => 'success',
+            'message' => 'Record Save.',
             ]);
-
-            return;
+            $this->reset();
+        }catch (\Exception $e){
+            // Catch any exceptions
+            $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'Internal Server Error',
+            ]);
         }
-
-        $SPJProgram = new SPJProgramModel();
-        $SPJProgram->school_id = $this->selectedSchool;
-        $SPJProgram->user_id = $userId;
-        $SPJProgram->grade_lvl = $this->grade_lvl;
-        $SPJProgram->school_year_start = $this->scYearStart;
-        $SPJProgram->school_year_end = $this->scYearEnd;
-        $SPJProgram->no_enrolled_male_stud = $this->enrolledMale;
-        $SPJProgram->no_enrolled_female_stud = $this->enrolledFemale;
-        $SPJProgram->overall_enrolled = $this->overallEnrolled;
-
-        $SPJProgram->save();
-
-        $this->emit('showNotifications', [
-        'type' => 'success',
-        'message' => 'Record Save.',
-        ]);
     }
 
     public function render()

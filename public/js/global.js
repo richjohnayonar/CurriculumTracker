@@ -11,15 +11,31 @@ document.addEventListener("livewire:load", function () {
         showNotification(data.type, data.message);
     });
 
-     livewire.on("confirmUpdate", () => {
+    livewire.on("confirmUpdate", () => {
          update();
-     });
+    });
 
-     Livewire.on("confirmDeletePassers", () => {
+    Livewire.on("confirmDeletePassers", () => {
          // Handle the confirmDeletePassers event here
         confirmDeletePassers();
-     });
-
+    });
+      
+    Livewire.on("showToast", function (data) {
+         toastr.options = {
+             closeButton: true,
+             progressBar: true,
+             positionClass: "toast-top-right",
+             showDuration: "300",
+             hideDuration: "1000",
+             timeOut: "3000",
+             extendedTimeOut: "1000",
+             showEasing: "swing",
+             hideEasing: "linear",
+             showMethod: "fadeIn",
+             hideMethod: "fadeOut",
+         };
+        toastr[data.type](data.message);
+    });
 });
 
 

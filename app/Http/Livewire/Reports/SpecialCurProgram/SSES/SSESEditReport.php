@@ -49,7 +49,7 @@ class SSESEditReport extends Component
     }
 
       public function updateRecord(){
-
+        try{
          // Find the ALS record to update
         $SSESDB = SSESProgramModel::findOrFail($this->SSESID);
 
@@ -118,6 +118,13 @@ class SSESEditReport extends Component
                 'type' => 'success',
                 'message' => 'Record updated.',
         ]);
+        }catch (\Exception $e){
+            // Catch any exceptions
+            $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'Internal Server Error',
+            ]);
+        }
     }
 
     public function navigateTo($route)
@@ -127,6 +134,11 @@ class SSESEditReport extends Component
     } 
 
     public function updated(){
+        if($this->total_male_enrolled === ''){
+            $this->total_male_enrolled = 0;
+        }elseif($this->total_female_enrolled === ''){
+            $this->total_female_enrolled = 0;
+        }
         $this->overall_enrolled = $this->total_male_enrolled + $this->total_female_enrolled;
     }
 

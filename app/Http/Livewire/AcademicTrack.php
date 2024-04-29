@@ -50,6 +50,8 @@ class AcademicTrack extends Component
     }
 
     public function savePost(){
+
+    try {
     // Get the authenticated user's ID
     $userId = Auth::id();
 
@@ -113,10 +115,24 @@ class AcademicTrack extends Component
         'type' => 'success',
         'message' => 'Save Succesfully',
     ]);
+
+    $this->reset();
+    }catch (\Exception $e){
+         // Catch any exceptions
+        $this->emit('showNotifications', [
+            'type' => 'error',
+            'message' => 'Internal Server Error',
+        ]);
+    }
 }
 
 
     public function updated(){
+        if($this->enrolledMale === ''){
+            $this->enrolledMale = 0;
+        }elseif($this->enrolledFemale === ''){
+            $this->enrolledFemale = 0;
+        }
         $this->overallEnrolled = $this->enrolledMale + $this->enrolledFemale;
     }
     public function render()

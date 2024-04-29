@@ -28,66 +28,79 @@ class SPEDProgram extends Component
     }
 
     public function updated(){
+        if($this->enrolledMale === ''){
+            $this->enrolledMale = 0;
+        }elseif($this->enrolledFemale === ''){
+            $this->enrolledFemale = 0;
+        }
         $this->overallEnrolled = $this->enrolledMale + $this->enrolledFemale;
     }
 
      public function savePost(){
-        
-        $userId = Auth::id();
+        try{
+            $userId = Auth::id();
 
-         // Extract year from the input date
-        $inputYear = date('Y', strtotime($this->scYearStart));
+            // Extract year from the input date
+            $inputYear = date('Y', strtotime($this->scYearStart));
 
-        // Check if there's an existing record with the same user_id, school_id, and school_year_start
-        $existingRecordQuery = SPEDProgramModel::where('user_id', $userId)
-        ->where('school_id', $this->selectedSchool)
-        ->where('type_of_learners', $this->type_of_learners);
+            // Check if there's an existing record with the same user_id, school_id, and school_year_start
+            $existingRecordQuery = SPEDProgramModel::where('user_id', $userId)
+            ->where('school_id', $this->selectedSchool)
+            ->where('type_of_learners', $this->type_of_learners);
 
-        if ($this->type_of_learners === 'Fast Learners') {
-            $existingRecordQuery->where('grade_lvl', $this->grade_lvl);
-        }
+            if ($this->type_of_learners === 'Fast Learners') {
+                $existingRecordQuery->where('grade_lvl', $this->grade_lvl);
+            }
 
-        $existingRecord = $existingRecordQuery
-            ->whereYear('school_year_start', $inputYear)
-            ->first();
+            $existingRecord = $existingRecordQuery
+                ->whereYear('school_year_start', $inputYear)
+                ->first();
 
 
-        if($existingRecord){
-            // If a record exists, prevent saving the duplicate record
+            if($existingRecord){
+                // If a record exists, prevent saving the duplicate record
+                $this->emit('showNotifications', [
+                    'type' => 'error',
+                    'message' => 'This record already in the database.',
+                ]);
+
+                return;
+            }
+
+            $SSESProgram = new SPEDProgramModel();
+            $SSESProgram->school_id = $this->selectedSchool;
+            $SSESProgram->user_id = $userId;
+            $SSESProgram->school_year_start = $this->scYearStart;
+            $SSESProgram->school_year_end = $this->scYearEnd;
+            $SSESProgram->type_of_learners = $this->type_of_learners;
+            if($this->type_of_learners === 'Fast Learners'){
+                $SSESProgram->grade_lvl = $this->grade_lvl;
+            }else{
+                $SSESProgram->grade_lvl = NULL;
+            }
+            $SSESProgram->no_enrolled_male_stud = $this->enrolledMale;
+            $SSESProgram->no_enrolled_female_stud = $this->enrolledFemale;
+            $SSESProgram->overall_enrolled = $this->overallEnrolled;
+            if($this->grade_lvl === 'Grade 6')
+            {
+                $SSESProgram->pisay_passers = $this->pisay_passers;
+                $SSESProgram->ste_passers = $this->ste_passers; 
+            }
+            // Save the model to the database
+            $SSESProgram->save();
+            
+            $this->emit('showNotifications', [
+            'type' => 'success',
+            'message' => 'Record Save.',
+            ]);
+            $this->reset();
+        }catch (\Exception $e){
+            // Catch any exceptions
             $this->emit('showNotifications', [
                 'type' => 'error',
-                'message' => 'This record already in the database.',
+                'message' => 'Internal Server Error',
             ]);
-
-            return;
         }
-
-        $SSESProgram = new SPEDProgramModel();
-        $SSESProgram->school_id = $this->selectedSchool;
-        $SSESProgram->user_id = $userId;
-        $SSESProgram->school_year_start = $this->scYearStart;
-        $SSESProgram->school_year_end = $this->scYearEnd;
-        $SSESProgram->type_of_learners = $this->type_of_learners;
-        if($this->type_of_learners === 'Fast Learners'){
-            $SSESProgram->grade_lvl = $this->grade_lvl;
-        }else{
-            $SSESProgram->grade_lvl = NULL;
-        }
-        $SSESProgram->no_enrolled_male_stud = $this->enrolledMale;
-        $SSESProgram->no_enrolled_female_stud = $this->enrolledFemale;
-        $SSESProgram->overall_enrolled = $this->overallEnrolled;
-        if($this->grade_lvl === 'Grade 6')
-        {
-            $SSESProgram->pisay_passers = $this->pisay_passers;
-            $SSESProgram->ste_passers = $this->ste_passers; 
-        }
-        // Save the model to the database
-        $SSESProgram->save();
-        
-        $this->emit('showNotifications', [
-        'type' => 'success',
-        'message' => 'Record Save.',
-        ]);
     }
 
     public function render()

@@ -62,7 +62,7 @@
                             <label for="No.OfEnrolledMale" class="block mb-2 text-sm font-medium text-gray-900 ">
                                 No. of Enrolled Male Student
                             </label>
-                            <input type="number" id="Male" placeholder="Male" wire:model.lazy='enrolledMale'
+                            <input type="number" id="Male" wire:model.lazy='enrolledMale'
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                 required />
                         </div>
@@ -70,7 +70,7 @@
                             <label for="No.OfEnrolledFemale" class="block mb-2 text-sm font-medium text-gray-900 ">
                                 No. of Enrolled Female Student
                             </label>
-                            <input type="number" id="Female" placeholder="Female" wire:model.lazy='enrolledFemale'
+                            <input type="number" id="Female" wire:model.lazy='enrolledFemale'
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                 required />
                         </div>

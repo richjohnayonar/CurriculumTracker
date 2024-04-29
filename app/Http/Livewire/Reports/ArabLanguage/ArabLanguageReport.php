@@ -37,6 +37,11 @@ class ArabLanguageReport extends Component
     }
 
     public function updated(){
+        if($this->enrolledMale === ''){
+            $this->enrolledMale = 0;
+        }elseif($this->enrolledFemale === ''){
+            $this->enrolledFemale = 0;
+        }
         $this->overallEnrolled = $this->enrolledMale + $this->enrolledFemale;
     }
 
@@ -82,7 +87,7 @@ class ArabLanguageReport extends Component
     
     public function updateRecord()
     {
-
+        try{
           // Find the ALS record to update
         $arabIslamDb = ArabicLanguage::findOrFail($this->ArabIslamID);
 
@@ -154,6 +159,13 @@ class ArabLanguageReport extends Component
                 'type' => 'success',
                 'message' => 'Record updated.',
             ]);
+        }catch (\Exception $e){
+            // Catch any exceptions
+            $this->emit('showNotifications', [
+                'type' => 'error',
+                'message' => 'Internal Server Error',
+            ]);
+        }
     }
     
       public function updatingSearch()

@@ -15,19 +15,25 @@ class Register extends Component
 
     public function register()
     {
-        $this->validate([
-            'name' => User::$rules['name'],
-            'email' => User::$rules['email'],
-            'password' => User::$rules['password'],
-        ]);
+         try {
+            $this->validate([
+                'name' => User::$rules['name'],
+                'email' => User::$rules['email'],
+                'password' => User::$rules['password'],
+            ]);
 
-        User::create([
-            'name' => $this->name,
-            'email' => $this->email,
-            'password' => Hash::make($this->password),
-        ]);
-
-        return redirect()->to('/login');
+            User::create([
+                'name' => $this->name,
+                'email' => $this->email,
+                'password' => Hash::make($this->password),
+            ]);
+            
+            $this->emit('showToast', ['type' => 'success', 'message' => 'Account Created']);
+            return redirect()->to('/login');
+        } catch (\Exception $e) {
+            // Catch any exceptions
+            $this->emit('showToast', ['type' => 'error', 'message' => 'Internal Server Error']);
+        }
     }
     
     public function navigateTo($link)

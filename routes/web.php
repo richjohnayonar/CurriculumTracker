@@ -49,12 +49,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/user-info', UserInfo::class);
 });
 
-Route::middleware(['auth', 'role:user'])->group(function () {
-    // Routes accessible only to users with the 'admin' role
-    // Route::get('/special-curricular-program', SpecialCurricularProgram::class);
-    // Route::get('/arabic-language', ArabicLanguageAndIslamicValuesEduc::class);
-    // Route::get('/als-program', AlsProgram::class);
-});
 Route::middleware(['auth'])->group(function () {
     Route::get('/', Dashboard::class)->name('dashboard');
     Route::get('/special-curricular-program', SpecialCurricularProgram::class);

@@ -61,70 +61,83 @@ class TVLTrack extends Component
     }
 
     public function savePost(){
-        $userId = Auth::id();
+        try{
+            $userId = Auth::id();
 
-        // Extract year from the input date
-        $inputYear = date('Y', strtotime($this->scYearStart));
+            // Extract year from the input date
+            $inputYear = date('Y', strtotime($this->scYearStart));
 
-        // Check if there's an existing record with the same user_id, school_id, and school_year_start
-        $existingRecord = TVLProgramModel::where('user_id', $userId)
-            ->where('school_id', $this->selectedSchool)
-            ->where('specialization', $this->specialization)
-            ->where('grade_lvl', $this->grade_lvl)
-            ->whereYear('school_year_start', $inputYear)
-            ->first();
+            // Check if there's an existing record with the same user_id, school_id, and school_year_start
+            $existingRecord = TVLProgramModel::where('user_id', $userId)
+                ->where('school_id', $this->selectedSchool)
+                ->where('specialization', $this->specialization)
+                ->where('grade_lvl', $this->grade_lvl)
+                ->whereYear('school_year_start', $inputYear)
+                ->first();
 
-        if($existingRecord){
-            // If a record exists, prevent saving the duplicate record
-              $this->emit('showNotifications', [
-                'type' => 'error',
-                'message' => 'This record already in the database.',
+            if($existingRecord){
+                // If a record exists, prevent saving the duplicate record
+                $this->emit('showNotifications', [
+                    'type' => 'error',
+                    'message' => 'This record already in the database.',
+                ]);
+
+                return;
+            }
+        
+            $TVLTRACK = new TVLProgramModel();
+            $TVLTRACK->school_id = $this->selectedSchool;
+            $TVLTRACK->user_id = $userId;
+            $TVLTRACK->school_year_start = $this->scYearStart;
+            $TVLTRACK->school_year_end = $this->scYearEnd; 
+            $TVLTRACK->specialization = $this->specialization;
+            $TVLTRACK->grade_lvl = $this->grade_lvl;
+            $TVLTRACK->total_male_enrolled = $this->enrolledMale;
+            $TVLTRACK->total_female_enrolled = $this->enrolledFemale;
+            $TVLTRACK->overall_enrolled = $this->overallEnrolled;
+            $TVLTRACK->total_graduates = $this->num_Grad;
+            $TVLTRACK->total_student_pursuing_college = $this->num_College_take;
+            $TVLTRACK->total_student_seeking_job = $this->num_job_take;
+            $TVLTRACK->total_student_doing_business = $this->num_business_take;
+            $TVLTRACK->undecided_student_total = $this->num_undecided;
+            $TVLTRACK->total_nc_passer = $this->NCPassers;
+            // Save the model to the database
+            $TVLTRACK->save();
+            foreach ($this->passerNames as $passerName) {
+                // Create a new instance of DostPasser model
+                $ncPasser = new NCPasserName();
+
+                // Fill the model attributes using the fillable array
+                $ncPasser->fill([
+                    'tvlTrack_id' => $TVLTRACK->id, 
+                    'full_name' => $passerName,
+                    // Add other attributes as needed
+                ]); 
+
+                // Save the DOST passer to the database
+                $ncPasser->save();
+            }
+
+                $this->emit('showNotifications', [
+            'type' => 'success',
+            'message' => 'Record Save.',
             ]);
-
-            return;
-        }
-    
-        $TVLTRACK = new TVLProgramModel();
-        $TVLTRACK->school_id = $this->selectedSchool;
-        $TVLTRACK->user_id = $userId;
-        $TVLTRACK->school_year_start = $this->scYearStart;
-        $TVLTRACK->school_year_end = $this->scYearEnd; 
-        $TVLTRACK->specialization = $this->specialization;
-        $TVLTRACK->grade_lvl = $this->grade_lvl;
-        $TVLTRACK->total_male_enrolled = $this->enrolledMale;
-        $TVLTRACK->total_female_enrolled = $this->enrolledFemale;
-        $TVLTRACK->overall_enrolled = $this->overallEnrolled;
-        $TVLTRACK->total_graduates = $this->num_Grad;
-        $TVLTRACK->total_student_pursuing_college = $this->num_College_take;
-        $TVLTRACK->total_student_seeking_job = $this->num_job_take;
-        $TVLTRACK->total_student_doing_business = $this->num_business_take;
-        $TVLTRACK->undecided_student_total = $this->num_undecided;
-        $TVLTRACK->total_nc_passer = $this->NCPassers;
-        // Save the model to the database
-        $TVLTRACK->save();
-        foreach ($this->passerNames as $passerName) {
-            // Create a new instance of DostPasser model
-            $ncPasser = new NCPasserName();
-
-            // Fill the model attributes using the fillable array
-            $ncPasser->fill([
-                'tvlTrack_id' => $TVLTRACK->id, 
-                'full_name' => $passerName,
-                // Add other attributes as needed
-            ]); 
-
-            // Save the DOST passer to the database
-            $ncPasser->save();
-        }
-
+            $this->reset();
+        }catch (\Exception $e){
+            // Catch any exceptions
             $this->emit('showNotifications', [
-        'type' => 'success',
-        'message' => 'Record Save.',
-        ]);
-
+                'type' => 'error',
+                'message' => 'Internal Server Error',
+            ]);
+        }
     }
 
     public function updated(){
+        if($this->enrolledMale === ''){
+            $this->enrolledMale = 0;
+        }elseif($this->enrolledFemale === ''){
+            $this->enrolledFemale = 0;
+        }
         $this->overallEnrolled = $this->enrolledMale + $this->enrolledFemale;
     }
     public $grade_lvl = 'Grade 11';
