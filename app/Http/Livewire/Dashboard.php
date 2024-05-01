@@ -2,13 +2,17 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\School;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Dashboard extends Component
 {
     public $user;
     public $scrollPosition = 0;
+
+    use WithPagination;
 
     public function mount()
     {
@@ -28,8 +32,10 @@ class Dashboard extends Component
 
     public function render()
     {
+        $schools = School::paginate(10);
         return view('livewire.dashboard', [
             'user' => $this->user,
+            'schools' => $schools,
         ]);
     }
 }

@@ -7,59 +7,45 @@
    
     {{-- <p class="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">:></p> --}}
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 mt-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 mt-8" x-data="{ activeTab: $persist('shs')}">
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md lg:col-span-2">
            <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
-            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab"
-                data-tabs-toggle="#default-tab-content" role="tablist">
-                <li class="me-2" role="presentation">
-                    <button class="inline-block p-4 border-b-2 rounded-t-lg" id="profile-tab" data-tabs-target="#profile"
-                        type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
+            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab">
+                <li class="me-2" role="presentation" >
+                    <button class="inline-block p-4 border-b-2 rounded-t-lg" id="profile-tab" @click="activeTab = 'shs'">SHS Program</button>
                 </li>
                 <li class="me-2" role="presentation">
                     <button
                         class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-                        id="dashboard-tab" data-tabs-target="#dashboard" type="button" role="tab" aria-controls="dashboard"
-                        aria-selected="false">Dashboard</button>
+                        id="dashboard-tab" @click="activeTab = 'specialProgram'">Special Curricular Program</button>
                 </li>
                 <li class="me-2" role="presentation">
                     <button
                         class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-                        id="settings-tab" data-tabs-target="#settings" type="button" role="tab" aria-controls="settings"
-                        aria-selected="false">Settings</button>
+                        id="settings-tab" @click="activeTab = 'arabic'">ALIVE</button>
                 </li>
                 <li role="presentation">
                     <button
                         class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-                        id="contacts-tab" data-tabs-target="#contacts" type="button" role="tab" aria-controls="contacts"
-                        aria-selected="false">Contacts</button>
+                        id="contacts-tab" @click="activeTab = 'als'">ALS</button>
                 </li>
             </ul>
         </div>
         <div id="default-tab-content">
-            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="profile" role="tabpanel"
-                aria-labelledby="profile-tab">
-                <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong
-                        class="font-medium text-gray-800 dark:text-white">Profile tab's associated content</strong>. Clicking
-                    another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control
-                    the content visibility and styling.</p>
+            <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="profile" x-show="activeTab === 'shs'">
+                    @livewire('reports.shs-program.all-report.all-shs')
             </div>
-            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="dashboard" role="tabpanel"
-                aria-labelledby="dashboard-tab">
-                <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong
-                        class="font-medium text-gray-800 dark:text-white">Dashboard tab's associated content</strong>. Clicking
-                    another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control
-                    the content visibility and styling.</p>
+            <div class=" p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="dashboard" x-show="activeTab === 'specialProgram'">
+                    @livewire('reports.special-cur-program.all-report.all-special-cur')
             </div>
-            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="settings" role="tabpanel"
-                aria-labelledby="settings-tab">
+            <div class=" p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="settings" x-show="activeTab === 'arabic'">
                 <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong
                         class="font-medium text-gray-800 dark:text-white">Settings tab's associated content</strong>. Clicking
                     another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control
                     the content visibility and styling.</p>
             </div>
-            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="contacts" role="tabpanel"
-                aria-labelledby="contacts-tab">
+            <div class=" p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="contacts"
+                x-show="activeTab === 'als'">
                 <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong
                         class="font-medium text-gray-800 dark:text-white">Contacts tab's associated content</strong>. Clicking
                     another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control
@@ -97,188 +83,30 @@
                         <tr>
                             <th
                                 class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tl-md rounded-bl-md">
-                                Service</th>
+                                School ID</th>
                             <th
                                 class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-                                Earning</th>
-                            <th
-                                class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">
-                                Status</th>
+                                School Name</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <div class="flex items-center">
-                                    <img src="https://placehold.co/32x32" alt="" class="w-8 h-8 rounded object-cover block">
-                                    <a href="#"
-                                        class="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate">Create
-                                        landing page</a>
-                                </div>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span class="text-[13px] font-medium text-emerald-500">+$235</span>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span
-                                    class="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none">Pending</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <div class="flex items-center">
-                                    <img src="https://placehold.co/32x32" alt="" class="w-8 h-8 rounded object-cover block">
-                                    <a href="#"
-                                        class="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate">Create
-                                        landing page</a>
-                                </div>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span class="text-[13px] font-medium text-rose-500">-$235</span>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span
-                                    class="inline-block p-1 rounded bg-rose-500/10 text-rose-500 font-medium text-[12px] leading-none">Withdrawn</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <div class="flex items-center">
-                                    <img src="https://placehold.co/32x32" alt="" class="w-8 h-8 rounded object-cover block">
-                                    <a href="#"
-                                        class="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate">Create
-                                        landing page</a>
-                                </div>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span class="text-[13px] font-medium text-emerald-500">+$235</span>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span
-                                    class="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none">Pending</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <div class="flex items-center">
-                                    <img src="https://placehold.co/32x32" alt="" class="w-8 h-8 rounded object-cover block">
-                                    <a href="#"
-                                        class="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate">Create
-                                        landing page</a>
-                                </div>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span class="text-[13px] font-medium text-rose-500">-$235</span>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span
-                                    class="inline-block p-1 rounded bg-rose-500/10 text-rose-500 font-medium text-[12px] leading-none">Withdrawn</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <div class="flex items-center">
-                                    <img src="https://placehold.co/32x32" alt="" class="w-8 h-8 rounded object-cover block">
-                                    <a href="#"
-                                        class="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate">Create
-                                        landing page</a>
-                                </div>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span class="text-[13px] font-medium text-emerald-500">+$235</span>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span
-                                    class="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none">Pending</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <div class="flex items-center">
-                                    <img src="https://placehold.co/32x32" alt="" class="w-8 h-8 rounded object-cover block">
-                                    <a href="#"
-                                        class="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate">Create
-                                        landing page</a>
-                                </div>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span class="text-[13px] font-medium text-rose-500">-$235</span>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span
-                                    class="inline-block p-1 rounded bg-rose-500/10 text-rose-500 font-medium text-[12px] leading-none">Withdrawn</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <div class="flex items-center">
-                                    <img src="https://placehold.co/32x32" alt="" class="w-8 h-8 rounded object-cover block">
-                                    <a href="#"
-                                        class="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate">Create
-                                        landing page</a>
-                                </div>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span class="text-[13px] font-medium text-emerald-500">+$235</span>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span
-                                    class="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none">Pending</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <div class="flex items-center">
-                                    <img src="https://placehold.co/32x32" alt="" class="w-8 h-8 rounded object-cover block">
-                                    <a href="#"
-                                        class="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate">Create
-                                        landing page</a>
-                                </div>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span class="text-[13px] font-medium text-rose-500">-$235</span>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span
-                                    class="inline-block p-1 rounded bg-rose-500/10 text-rose-500 font-medium text-[12px] leading-none">Withdrawn</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <div class="flex items-center">
-                                    <img src="https://placehold.co/32x32" alt="" class="w-8 h-8 rounded object-cover block">
-                                    <a href="#"
-                                        class="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate">Create
-                                        landing page</a>
-                                </div>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span class="text-[13px] font-medium text-emerald-500">+$235</span>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span
-                                    class="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none">Pending</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <div class="flex items-center">
-                                    <img src="https://placehold.co/32x32" alt="" class="w-8 h-8 rounded object-cover block">
-                                    <a href="#"
-                                        class="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate">Create
-                                        landing page</a>
-                                </div>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span class="text-[13px] font-medium text-rose-500">-$235</span>
-                            </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50">
-                                <span
-                                    class="inline-block p-1 rounded bg-rose-500/10 text-rose-500 font-medium text-[12px] leading-none">Withdrawn</span>
-                            </td>
-                        </tr>
+                        @foreach ($schools as $school)
+                            <tr>
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                    <div class="flex items-center">
+                                        <span class="text-gray-600 text-sm font-medium ml-2 truncate">{{$school->school_id}}</span>
+                                    </div>
+                                </td>
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                    <span class="text-[13px] font-medium text-blue-500"> {{$school->name}}</span>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
+            </div>
+            <div class="py-4">
+                    {{ $schools->links() }}
             </div>
         </div>
     </div>

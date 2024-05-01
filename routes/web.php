@@ -11,9 +11,16 @@ use App\Http\Livewire\Reports\AlsProgram\AlsProgramReport;
 use App\Http\Livewire\Reports\ArabLanguage\ArabLanguageReport;
 use App\Http\Livewire\Reports\ShsProgram\AcademicTrackEdit;
 use App\Http\Livewire\Reports\ShsProgram\AcademicTrackViewReport;
+use App\Http\Livewire\Reports\ShsProgram\AllReport\SpecificSpecializationReport;
+use App\Http\Livewire\Reports\ShsProgram\AllReport\SpecificStrandReport;
 use App\Http\Livewire\Reports\ShsProgram\ShsProgramReport;
 use App\Http\Livewire\Reports\ShsProgram\TVLEditReport;
 use App\Http\Livewire\Reports\ShsProgram\TVLViewReport;
+use App\Http\Livewire\Reports\SpecialCurProgram\AllReport\SpecificSPA;
+use App\Http\Livewire\Reports\SpecialCurProgram\AllReport\SpecificSped;
+use App\Http\Livewire\Reports\SpecialCurProgram\AllReport\SpecificSPJ;
+use App\Http\Livewire\Reports\SpecialCurProgram\AllReport\SpecificSses;
+use App\Http\Livewire\Reports\SpecialCurProgram\AllReport\SpecificSTE;
 use App\Http\Livewire\Reports\SpecialCurProgram\SPA\SPAEditReport;
 use App\Http\Livewire\Reports\SpecialCurProgram\SPA\SPAViewReport;
 use App\Http\Livewire\Reports\SpecialCurProgram\SPECIALSSESProgram;
@@ -51,6 +58,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', Dashboard::class)->name('dashboard');
+    Route::get('dashboard/acad/{uniqueStrand}', SpecificStrandReport::class);
+    Route::get('dashboard/tvl/{uniqueSpecialization}', SpecificSpecializationReport::class);
+    Route::get('dashboard/special-curricular/sses/{uniqueGradeLvl}', SpecificSses::class);
+    Route::get('dashboard/special-curricular/ste/{uniqueGradeLvl}', SpecificSTE::class);
+    Route::get('dashboard/special-curricular/sped/{uniqueLeanerTypes}', SpecificSped::class);
+    Route::get('dashboard/special-curricular/spj/{uniqueGradeLvl}', SpecificSPJ::class);
+    Route::get('dashboard/special-curricular/spa/{uniqueGradeLvl}', SpecificSPA::class);
     Route::get('/special-curricular-program', SpecialCurricularProgram::class);
     Route::get('/arabic-language', ArabicLanguageAndIslamicValuesEduc::class);
     Route::get('/als-program', AlsProgram::class);

@@ -64,11 +64,11 @@
                             </option>
                             @endif
                             @if($grade_lvl == 'Grade 12')
-                            <option value="Food & Beverage Services (FBS)/Bread &Pastry Production (BPP)">
-                                Food & Beverage Services (FBS)/Bread &Pastry Production (BPP)
+                            <option value="Food & Beverage Services (FBS) - Bread & Pastry Production (BPP)">
+                                Food & Beverage Services (FBS) -  Bread & Pastry Production (BPP)
                             </option>
-                            <option value="Wellness Massage/Beautyt Care (Nail Art)">
-                                Wellness Massage/Beautyt Care (Nail Art)
+                            <option value="Wellness Massage - Beautyt Care (Nail Art)">
+                                Wellness Massage - Beautyt Care (Nail Art)
                             </option>
                             <option value="Computer Systems Servicing (CSS)">
                                 Computer Systems Servicing (CSS)
@@ -82,8 +82,8 @@
                             <option value="Tailoring">
                                 Tailoring
                             </option>
-                            <option value="Artificial Insemination/Slaughtering">
-                                Artificial Insemination/Slaughtering
+                            <option value="Artificial Insemination - Slaughtering">
+                                Artificial Insemination - Slaughtering
                             </option>
                             @endif
                         </select>

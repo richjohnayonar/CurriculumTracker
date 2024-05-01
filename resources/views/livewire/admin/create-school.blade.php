@@ -98,13 +98,13 @@
                         <div class="grid">
                             <div>
                                 <label for="school_school_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">School ID</label>
-                                <input type="text" id="year_end" wire:model.defer='school_school_id'
+                                <input type="text" id="school_id" wire:model.defer='school_school_id'
                                     class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     required="">
                             </div>
                             <div>
                                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">School Name</label>
-                                <input type="text" id="year_end" wire:model.defer='name'
+                                <input type="text" id="School_name" wire:model.defer='name'
                                     class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     required="">
                             </div>
